@@ -25,6 +25,8 @@ impl<F:FieldExt, const RANGE:usize> RangeCheckTable<F,RANGE> {
             let mut offset = 0;
             for i in 0..RANGE{
                 table.assign_cell(|| "assign cell", self.value, offset,|| Value::known(F::from(i as u64)))?;
+
+                offset += 1;
             }
             Ok(())
         })

@@ -67,7 +67,7 @@ impl<F:FieldExt,const RANGE:usize, const LOOKUP_RANGE: usize> RangeCheckConfig<F
         range: usize
     ) -> Result<(),Error> {
         assert!(range <= LOOKUP_RANGE);
-        if (range < RANGE) {
+        if range < RANGE {
             layouter.assign_region(|| "Assign value", |mut region| {
                 let offset = 0;
                 self.q_range_check.enable(&mut region, offset)?;
@@ -120,6 +120,7 @@ mod tests {
         }
 
         fn synthesize(&self, config: Self::Config,mut layouter: impl Layouter<F>) -> Result<(), Error> {
+            config.table.load(&mut layouter)?;
             config.assign(layouter.namespace(|| "Assign Value"), self.value,RANGE)?;
             config.assign(layouter.namespace(|| "Assign larger Value"), self.large_value,LOOKUP_RANGE)?;
             Ok(())
@@ -128,7 +129,7 @@ mod tests {
 
     #[test]
     fn test_range_check(){
-        let k = 4;
+        let k = 9;
         const RANGE: usize = 8;
         const LOOKUP_RANGE: usize = 256;
 
